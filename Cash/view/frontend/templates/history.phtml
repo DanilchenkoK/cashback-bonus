@@ -1,0 +1,24 @@
+<table>
+    <thead>
+        <tr>
+            <th>
+                <?=__("Operation")?>
+            </th>
+            <th>
+                <?=__('Remains Coins')?>
+            </th>
+            <th>
+                <?=__('Created At')?>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($block->getBonusHistory() as $item) :?>
+            <tr>
+                <td><?= $item->getData('operation');?> <br></td>
+                <td><?= $item->getData('remain_coin');?> <br></td>
+                <td><?= $item->getData('created_at');?> <br></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

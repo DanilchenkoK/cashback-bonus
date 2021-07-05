@@ -1,0 +1,15 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="cashback_bonus_history_listing_data_source" xsi:type="string">Kirill\Cash\Model\ResourceModel\History\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Kirill\Cash\Model\ResourceModel\History\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">cashback_bonus_history</argument>
+            <argument name="resourceModel" xsi:type="string">Kirill\Cash\Model\ResourceModel\History</argument>
+        </arguments>
+    </virtualType>
+</config>
