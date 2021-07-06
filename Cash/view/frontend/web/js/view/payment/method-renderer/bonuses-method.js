@@ -8,12 +8,9 @@ define(
             defaults: {
                 template: 'Kirill_Cash/payment/bonuses'
             },
-            getMailingAddress: function () {
+            getMailingAddress:  ()=> {
                 return window.checkoutConfig.payment.checkmo.mailingAddress;
-            },
-            getInstructions: function () {
-                return window.checkoutConfig.payment.instructions[this.item.method];
-            },
+            }
         });
     }
 );

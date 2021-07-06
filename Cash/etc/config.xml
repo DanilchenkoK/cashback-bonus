@@ -6,8 +6,9 @@
                 <active>1</active>
                 <model>Kirill\Cash\Model\Payment\Bonuses</model>
                 <order_status>pending</order_status>
-                <title>Bonuses</title>
+                <title>Use Cashback Bonus</title>
                 <allowspecific>0</allowspecific>
+                <payment_action>authorize</payment_action>
                 <group>offline</group>
             </bonuses>
         </payment>

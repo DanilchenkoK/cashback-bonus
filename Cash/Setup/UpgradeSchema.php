@@ -20,7 +20,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 )
                     ->addColumn(
                         'customer_id',
-                        \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
                         '255',
                         ['nullable => false'],
                         'Customer ID'
