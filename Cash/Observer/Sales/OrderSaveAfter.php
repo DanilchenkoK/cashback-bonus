@@ -108,7 +108,7 @@ class OrderSaveAfter implements ObserverInterface
 
     public function checkPayment($payment): bool
     {
-        if ($payment == 'bonus') {
+        if ($payment == 'cashbackbonus') {
             return false;
         }
         return true;
