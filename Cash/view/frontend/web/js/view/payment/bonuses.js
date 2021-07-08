@@ -2,7 +2,6 @@ define(
     [
         'uiComponent',
         'Magento_Checkout/js/model/payment/renderer-list',
-        'jquery'
     ],
     function (
         Component,
@@ -11,8 +10,12 @@ define(
         'use strict';
         rendererList.push(
             {
-                type: 'bonuses',
-                component: 'Kirill_Cash/js/view/payment/method-renderer/bonuses-method'
+                type: 'cashbackbonus',
+                component: 'Kirill_Cash/js/view/payment/method-renderer/cashback-method'
+            },
+            {
+                type: 'bonus',
+                component: 'Kirill_Cash/js/view/payment/method-renderer/bonus-method'
             }
         );
         return Component.extend({});

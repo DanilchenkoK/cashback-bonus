@@ -54,9 +54,17 @@ class AddCashbackCustomerAttribute implements DataPatchInterface, PatchRevertabl
      */
     public function apply()
     {
+
         $this->moduleDataSetup->getConnection()->startSetup();
         /** @var CustomerSetup $customerSetup */
         $customerSetup = $this->customerSetupFactory->create(['setup' => $this->moduleDataSetup]);
+
+        $customerSetup->removeAttribute(
+            \Magento\Customer\Model\Customer::ENTITY,
+            'cashback'
+        );
+
+
         $customerEntity = $customerSetup->getEavConfig()->getEntityType(Customer::ENTITY);
         $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
@@ -74,6 +82,7 @@ class AddCashbackCustomerAttribute implements DataPatchInterface, PatchRevertabl
                 'source' => '',
                 'required' => false,
                 'position' => 10,
+                'default' => 'no coins',
                 'visible' => true,
                 'system' => false,
                 'is_used_in_grid' => true,

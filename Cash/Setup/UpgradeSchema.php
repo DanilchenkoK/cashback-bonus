@@ -19,8 +19,20 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     $installer->getTable('cashback_bonus_history')
                 )
                     ->addColumn(
-                        'customer_id',
+                        'id',
                         \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                        null,
+                        [
+                            'identity' => true,
+                            'nullable' => false,
+                            'primary'  => true,
+                            'unsigned' => true,
+                        ],
+                        'Car ID'
+                    )
+                    ->addColumn(
+                        'customer_id',
+                        \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                         '255',
                         ['nullable => false'],
                         'Customer ID'
@@ -34,7 +46,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     )
                     ->addColumn(
                         'remain_coin',
-                        \Magento\Framework\DB\Ddl\Table::TYPE_FLOAT,
+                        \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                         null,
                         [],
                         'Remains Coins'
