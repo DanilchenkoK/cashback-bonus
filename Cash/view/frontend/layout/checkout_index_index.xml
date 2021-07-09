@@ -15,11 +15,9 @@
                                                     <item name="children" xsi:type="array">
                                                         <item name="renders" xsi:type="array">
                                                             <item name="children" xsi:type="array">
-
-                                                                <item name="bonuses" xsi:type="array">
+                                                                <item name="bonus-payments" xsi:type="array">
                                                                     <item name="component" xsi:type="string">Kirill_Cash/js/view/payment/bonuses</item>
                                                                     <item name="methods" xsi:type="array">
-
                                                                         <item name="cashbackbonus" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>

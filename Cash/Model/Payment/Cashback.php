@@ -14,11 +14,13 @@ use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Payment\Block\Info\Instructions;
 use Magento\Payment\Helper\Data;
+use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\Data\CartInterface;
@@ -27,11 +29,10 @@ class Cashback extends AbstractMethod
 {
     const PAYMENT_METHOD_CASHBACK_CODE = 'cashbackbonus';
     protected $_code = self::PAYMENT_METHOD_CASHBACK_CODE;
-    protected $_formBlockType = \Kirill\Cash\Block\Form\Cashback::class;
     protected $_infoBlockType = Instructions::class;
     protected $_isOffline = true;
     private $customerSesion;
-    private $totalSum;
+
 
     public function __construct(Context $context,
                                 Session $customerSession,
@@ -68,6 +69,13 @@ class Cashback extends AbstractMethod
         return trim($this->getConfigData('instructions'));
     }
 
+    public function authorize(InfoInterface $payment, $amount)
+    {
+        if (!$this->canAuthorize()) {
+            throw new LocalizedException(__('The authorize action is not available.'));
+        }
+        return $this;
+    }
 
     public function isAvailable(CartInterface $quote = null)
     {

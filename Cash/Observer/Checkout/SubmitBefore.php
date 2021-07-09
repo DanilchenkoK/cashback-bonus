@@ -55,12 +55,14 @@ class SubmitBefore implements ObserverInterface
                     'total_cash' => $cashback + $customer_cashback,
                 ]);
             } else {
+                if ($customer_cashback - $params['subtotal'] >= 0) {
+                    $this->updateAttributeCashback($observer->getQuote()->getCustomer(),);
+                    $this->createHistoryRow('written off', [
+                        'customer_id' => $params['customer_id'],
+                        'total_cash' => $customer_cashback - $params['subtotal']
+                    ]);
+                }
 
-                $this->updateAttributeCashback($observer->getQuote()->getCustomer(), $customer_cashback - $params['subtotal']);
-                $this->createHistoryRow('written off', [
-                    'customer_id' => $params['customer_id'],
-                    'total_cash' => $customer_cashback - $params['subtotal']
-                ]);
             }
         } catch (Exception $e) {
         }
