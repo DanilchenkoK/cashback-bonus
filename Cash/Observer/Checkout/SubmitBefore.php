@@ -5,20 +5,19 @@
  */
 declare(strict_types=1);
 
-namespace Kirill\Cash\Observer\Sales;
+namespace Kirill\Cash\Observer\Checkout;
 
+use Exception;
 use Kirill\Cash\Helper\Data;
-use Kirill\Cash\Model\HistoryFactory;
 use Kirill\Cash\Model\ResourceModel\History;
+use Kirill\Cash\Model\HistoryFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
 
-
-class OrderSaveAfter implements ObserverInterface
+class SubmitBefore implements ObserverInterface
 {
-
 
     private $helper;
     private $historyFactory;
@@ -43,31 +42,34 @@ class OrderSaveAfter implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
+        try {
             $params = $this->getParams($observer);
+            $customer_cashback = $this->getAttributeCashback($observer);
+
             if ($this->checkPayment($observer->getQuote()->getPayment()->getMethod())) {
 
                 $cashback = $params['subtotal'] / 100 * $params['pct'];
-                $customer_cashback = $this->getAttributeCashback($observer);
-
                 $this->updateAttributeCashback($observer->getQuote()->getCustomer(), $cashback + $customer_cashback);
-                $this->createHistoryRow('create', [
+                $this->createHistoryRow('credited', [
                     'customer_id' => $params['customer_id'],
                     'total_cash' => $cashback + $customer_cashback,
                 ]);
             } else {
 
-                $customer_cashback = $this->getAttributeCashback($observer);
                 $this->updateAttributeCashback($observer->getQuote()->getCustomer(), $customer_cashback - $params['subtotal']);
-                $this->createHistoryRow('debit', [
+                $this->createHistoryRow('written off', [
                     'customer_id' => $params['customer_id'],
                     'total_cash' => $customer_cashback - $params['subtotal']
                 ]);
             }
+        } catch (Exception $e) {
+        }
+
 
     }
 
 
-    public function getParams($observer)
+    private function getParams($observer)
     {
         return [
             'pct' => $this->helper->getGeneralConfig('pct'),
@@ -78,7 +80,7 @@ class OrderSaveAfter implements ObserverInterface
     }
 
 
-    public function createHistoryRow($operation, $param)
+    private function createHistoryRow($operation, $param)
     {
         $history = $this->historyFactory->create();
         $history->setCustomerId($param['customer_id']);
@@ -88,30 +90,29 @@ class OrderSaveAfter implements ObserverInterface
     }
 
 
-    public function getAttributeCashback($observer)
+    private function getAttributeCashback($observer)
     {
         try {
             return $observer->getQuote()->getCustomer()->getCustomAttributes()['cashback']->getValue();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return 0;
         }
 
     }
 
 
-    public function updateAttributeCashback($customer, $cashback)
+    private function updateAttributeCashback($customer, $cashback)
     {
         $customer->setCustomAttribute('cashback', $cashback);
         $this->customerRepository->save($customer);
 
     }
 
-    public function checkPayment($payment): bool
+    private function checkPayment($payment): bool
     {
         if ($payment == 'cashbackbonus') {
             return false;
         }
         return true;
     }
-
 }

@@ -1,21 +1,38 @@
 <?php
+
 namespace Kirill\Cash\Block\Adminhtml\Bonus;
 
+use Kirill\Cash\Model\ResourceModel\History\CollectionFactory;
+use Magento\Backend\Block\Template\Context;
 use Magento\Customer\Controller\RegistryConstants;
+use Magento\Framework\Registry;
+use Magento\Framework\View\Element\Template;
 use Magento\Ui\Component\Layout\Tabs\TabInterface;
 
-class Tab extends \Magento\Framework\View\Element\Template implements TabInterface
+class Tab extends Template implements TabInterface
 {
     protected $_coreRegistry;
     protected $_template = 'customer_bonus_history.phtml';
+    private  $historyCollectionFactory;
 
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
+        Context $context,
+        CollectionFactory $historyCollectionFactory,
+        Registry $registry,
         array $data = []
-    ) {
+    )
+    {
+        $this->historyCollectionFactory = $historyCollectionFactory;
         $this->_coreRegistry = $registry;
         parent::__construct($context, $data);
+    }
+
+
+    public function getCollectionHistory()
+    {
+        $historyCollection = $this->historyCollectionFactory->create();
+        $historyCollection->addFieldToFilter('customer_id', $this->getCustomerId());
+        return $historyCollection;
     }
 
     public function getCustomerId()
@@ -57,7 +74,7 @@ class Tab extends \Magento\Framework\View\Element\Template implements TabInterfa
     public function getTabUrl()
     {
         return '';
-      //  return $this->getUrl('cashback/bonus/history', ['_current' => true]);
+        //  return $this->getUrl('cashback/bonus/history', ['_current' => true]);
     }
 
     public function isAjaxLoaded()
