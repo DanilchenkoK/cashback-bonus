@@ -13,14 +13,5 @@ define([
         defaults: {
             template: 'Kirill_Cash/payment/cashback'
         },
-
-        /**
-         * Returns payment method instructions.
-         *
-         * @return {*}
-         */
-        getInstructions: function () {
-            return window.checkoutConfig.payment.instructions[this.item.method];
-        }
     });
 });

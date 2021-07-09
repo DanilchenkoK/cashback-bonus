@@ -56,7 +56,7 @@ class SubmitBefore implements ObserverInterface
                 ]);
             } else {
                 if ($customer_cashback - $params['subtotal'] >= 0) {
-                    $this->updateAttributeCashback($observer->getQuote()->getCustomer(),);
+                    $this->updateAttributeCashback($observer->getQuote()->getCustomer(), $customer_cashback - $params['subtotal']);
                     $this->createHistoryRow('written off', [
                         'customer_id' => $params['customer_id'],
                         'total_cash' => $customer_cashback - $params['subtotal']
