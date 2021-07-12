@@ -13,11 +13,17 @@ class History extends \Magento\Framework\Model\AbstractModel implements \Magento
         $this->_init('Kirill\Cash\Model\ResourceModel\History');
     }
 
+    /**
+     * @return string[]
+     */
     public function getIdentities()
     {
         return [self::CACHE_TAG . '_' . $this->getId()];
     }
 
+    /**
+     * @return array
+     */
     public function getDefaultValues()
     {
         $values = [];

@@ -17,7 +17,11 @@ class SaveBefore implements ObserverInterface
     private $historyFactory;
     private $historyResource;
 
-
+    /**
+     * SaveBefore constructor.
+     * @param HistoryFactory $historyFactory
+     * @param History $historyResource
+     */
     public function __construct(
         HistoryFactory $historyFactory,
         History $historyResource)
@@ -36,18 +40,21 @@ class SaveBefore implements ObserverInterface
         Observer $observer
     )
     {
-        $this->createHistoryRow('admin operation', [
+        $this->createHistoryRow([
             'customer_id' => $observer->getCustomer()->getId(),
             'total_cash' => $observer->getCustomer()->getCashback()
         ]);
     }
 
-
-    private function createHistoryRow($operation, $param)
+    /**
+     * @param $param
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     */
+    private function createHistoryRow($param)
     {
         $history = $this->historyFactory->create();
         $history->setCustomerId($param['customer_id']);
-        $history->setOperation($operation);
+        $history->setOperation('admin operation');
         $history->setRemainCoin($param['total_cash']);
         $this->historyResource->save($history);
     }

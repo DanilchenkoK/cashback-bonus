@@ -14,8 +14,8 @@
                 <field id="pct" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1"
                        translate="label">
                     <label>pct</label>
-                    <comment>This is the percentage that will be returned to the buyer after payment of the purchase
-                    </comment>
+                    <comment>This is the percentage that will be returned to the buyer after payment of the purchase</comment>
+                    <validate>validate-number</validate>
                 </field>
             </group>
         </section>

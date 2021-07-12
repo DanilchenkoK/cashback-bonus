@@ -16,14 +16,36 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
 
+/**
+ * Class SubmitBefore
+ * @package Kirill\Cash\Observer\Checkout
+ */
 class SubmitBefore implements ObserverInterface
 {
-
+    /**
+     * @var Data
+     */
     private $helper;
+    /**
+     * @var HistoryFactory
+     */
     private $historyFactory;
+    /**
+     * @var History
+     */
     private $historyResource;
+    /**
+     * @var CustomerRepositoryInterface
+     */
     private $customerRepository;
 
+    /**
+     * SubmitBefore constructor.
+     * @param Data $helper
+     * @param HistoryFactory $historyFactory
+     * @param History $historyResource
+     * @param CustomerRepositoryInterface $customerRepository
+     */
     public function __construct(
         Data $helper,
         HistoryFactory $historyFactory,
@@ -54,23 +76,23 @@ class SubmitBefore implements ObserverInterface
                     'customer_id' => $params['customer_id'],
                     'total_cash' => $cashback + $customer_cashback,
                 ]);
-            } else {
-                if ($customer_cashback - $params['subtotal'] >= 0) {
-                    $this->updateAttributeCashback($observer->getQuote()->getCustomer(), $customer_cashback - $params['subtotal']);
-                    $this->createHistoryRow('written off', [
-                        'customer_id' => $params['customer_id'],
-                        'total_cash' => $customer_cashback - $params['subtotal']
-                    ]);
-                }
-
+            }else{
+                $this->createHistoryRow('written off', [
+                    'customer_id' => $params['customer_id'],
+                    'total_cash' => $customer_cashback - $params['subtotal']
+                ]);
             }
+
         } catch (Exception $e) {
         }
 
 
     }
 
-
+    /**
+     * @param $observer
+     * @return array
+     */
     private function getParams($observer)
     {
         return [
@@ -81,7 +103,11 @@ class SubmitBefore implements ObserverInterface
 
     }
 
-
+    /**
+     * @param $operation
+     * @param $param
+     * @throws AlreadyExistsException
+     */
     private function createHistoryRow($operation, $param)
     {
         $history = $this->historyFactory->create();
@@ -91,7 +117,10 @@ class SubmitBefore implements ObserverInterface
         $this->historyResource->save($history);
     }
 
-
+    /**
+     * @param $observer
+     * @return int
+     */
     private function getAttributeCashback($observer)
     {
         try {
@@ -102,14 +131,23 @@ class SubmitBefore implements ObserverInterface
 
     }
 
-
+    /**
+     * @param $customer
+     * @param $cashback
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\State\InputMismatchException
+     */
     private function updateAttributeCashback($customer, $cashback)
     {
         $customer->setCustomAttribute('cashback', $cashback);
         $this->customerRepository->save($customer);
-
     }
 
+    /**
+     * @param $payment
+     * @return bool
+     */
     private function checkPayment($payment): bool
     {
         if ($payment == 'cashbackbonus') {
