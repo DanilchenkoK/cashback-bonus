@@ -13,7 +13,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
 
-class SaveBefore implements ObserverInterface
+class SaveAfterDataObject implements ObserverInterface
 {
     private $historyFactory;
     private $historyResource;
