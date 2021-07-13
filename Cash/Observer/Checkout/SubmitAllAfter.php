@@ -10,6 +10,7 @@ namespace Kirill\Cash\Observer\Checkout;
 use Exception;
 use Kirill\Cash\Helper\Data;
 use Kirill\Cash\Model\ResourceModel\History;
+use Kirill\Cash\Model\HistoryFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -38,16 +39,16 @@ class SubmitAllAfter implements ObserverInterface
     private $customerRepository;
 
     /**
-     * SubmitBefore constructor.
+     * SubmitAllAfter constructor.
+     * @param History $historyResource
      * @param Data $helper
      * @param HistoryFactory $historyFactory
-     * @param History $historyResource
      * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
+        History $historyResource,
         Data $helper,
         HistoryFactory $historyFactory,
-        History $historyResource,
         CustomerRepositoryInterface $customerRepository
     )
     {
@@ -62,30 +63,26 @@ class SubmitAllAfter implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        try {
-            $params = $this->getParams($observer);
-            $customer_cashback = $this->getAttributeCashback($observer);
 
-            if ($this->checkPayment($observer->getQuote()->getPayment()->getMethod())) {
+        $params = $this->getParams($observer);
+        $customer_cashback = $this->getAttributeCashback($observer);
 
-                $cashback = $params['subtotal'] / 100 * $params['pct'];
-                $this->updateAttributeCashback($observer->getQuote()->getCustomer(), $cashback + $customer_cashback);
-                $this->createHistoryRow('credited', [
-                    'customer_id' => $params['customer_id'],
-                    'total_cash' => $cashback + $customer_cashback,
-                    'sum' => $cashback
-                ]);
-            } else {
-                $this->createHistoryRow('debit', [
-                    'customer_id' => $params['customer_id'],
-                    'total_cash' => $customer_cashback - $params['subtotal'],
-                    'sum' => $params['subtotal']
-                ]);
-            }
+        if ($this->checkPayment($observer->getQuote()->getPayment()->getMethod())) {
 
-        } catch (Exception $e) {
+            $cashback = $params['subtotal'] / 100 * $params['pct'];
+            $this->updateAttributeCashback($observer->getQuote()->getCustomer(), $cashback + $customer_cashback);
+            $this->createHistoryRow('credited', [
+                'customer_id' => $params['customer_id'],
+                'total_cash' => $cashback + $customer_cashback,
+                'sum' => $cashback
+            ]);
+        } else {
+            $this->createHistoryRow('debit', [
+                'customer_id' => $params['customer_id'],
+                'total_cash' => $customer_cashback - $params['subtotal'],
+                'sum' => $params['subtotal']
+            ]);
         }
-
 
     }
 
@@ -151,6 +148,6 @@ class SubmitAllAfter implements ObserverInterface
      */
     private function checkPayment($payment): bool
     {
-        return ($payment == 'cashbackbonus');
+        return !($payment == 'cashbackbonus');
     }
 }

@@ -7,10 +7,10 @@
                 comment="Customer ID"/>
         <column xsi:type="varchar" name="operation" nullable="false" length="255" comment="Operation"/>
         <column xsi:type="float" name="remain_coin" nullable="false"  comment="Remains Coins"/>
-        <column xsi:type="float" name="sum" nullable="false"  comment="Sum"/>
-        <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+        <column xsi:type="float" name="sum" nullable="false"  comment="Operation Sum"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Operation Time"/>
-        <column xsi:type="timestamp" name="update_time" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="History Update Time"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
