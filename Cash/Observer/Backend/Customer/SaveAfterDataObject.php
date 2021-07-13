@@ -48,7 +48,7 @@ class SaveAfterDataObject implements ObserverInterface
         $this->createHistoryRow([
             'customer_id' => $observer->getCustomerDataObject()->getId(),
             'total_cash' => $observer->getCustomerDataObject()->getCustomAttributes()['cashback']->getValue(),
-            'sum' => $current_sum < 0 ? -$current_sum : $current_sum
+            'sum' => $current_sum
         ]);
     }
 
