@@ -39,8 +39,6 @@ class SaveAfterDataObject implements ObserverInterface
         Observer $observer
     )
     {
-
-
         $this->createHistoryRow([
             'customer_id' => $observer->getCustomerDataObject()->getId(),
             'total_cash' => $observer->getCustomerDataObject()->getCustomAttributes()['cashback']->getValue(),
@@ -48,6 +46,10 @@ class SaveAfterDataObject implements ObserverInterface
         ]);
     }
 
+    /**
+     * @param $observer
+     * @return float|int
+     */
     private function getOperationSum($observer)
     {
         $new_cash_value = $observer->getCustomerDataObject()->getCustomAttributes()['cashback']->getValue();
