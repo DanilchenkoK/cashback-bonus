@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kirill\Cash\ViewModel;
 
+use Kirill\Cash\Model\HistoryRepository;
 use Kirill\Cash\Model\ResourceModel\History\CollectionFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\DataObject;
@@ -18,10 +19,12 @@ class History extends DataObject implements ArgumentInterface
      * @var Session
      */
     private $customerSession;
+
+
     /**
-     * @var CollectionFactory
+     * @var HistoryRepository
      */
-    private $historyCollectionFactory;
+    private $historyRepository;
 
     /**
      * History constructor.
@@ -30,14 +33,14 @@ class History extends DataObject implements ArgumentInterface
      * @param array $data
      */
     public function __construct(
-        CollectionFactory $historyCollectionFactory,
         Session $customerSession,
+        HistoryRepository $historyRepository,
         array $data = [])
     {
         parent::__construct($data);
 
+        $this->historyRepository = $historyRepository;
         $this->customerSession = $customerSession;
-        $this->historyCollectionFactory = $historyCollectionFactory;
     }
 
     /**
@@ -45,9 +48,7 @@ class History extends DataObject implements ArgumentInterface
      */
     public function getBonusHistory()
     {
-        $historyCollection = $this->historyCollectionFactory->create();
-        $historyCollection->addFieldToFilter('customer_id', $this->customerSession->getCustomer()->getId());
-        return $historyCollection;
+        return $this->historyRepository->getListByCustomerId($this->customerSession->getId());
     }
 
 }

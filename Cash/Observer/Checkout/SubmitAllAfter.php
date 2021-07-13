@@ -9,7 +9,7 @@ namespace Kirill\Cash\Observer\Checkout;
 
 use Exception;
 use Kirill\Cash\Helper\Data;
-use Kirill\Cash\Model\ResourceModel\History;
+use Kirill\Cash\Model\HistoryRepository;
 use Kirill\Cash\Model\HistoryFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Event\Observer;
@@ -26,13 +26,13 @@ class SubmitAllAfter implements ObserverInterface
      */
     private $helper;
     /**
+     * @var HistoryRepository
+     */
+    private $historyRepository;
+    /**
      * @var HistoryFactory
      */
     private $historyFactory;
-    /**
-     * @var History
-     */
-    private $historyResource;
     /**
      * @var CustomerRepositoryInterface
      */
@@ -46,15 +46,15 @@ class SubmitAllAfter implements ObserverInterface
      * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
-        History $historyResource,
         Data $helper,
         HistoryFactory $historyFactory,
+        HistoryRepository $historyRepository,
         CustomerRepositoryInterface $customerRepository
     )
     {
         $this->customerRepository = $customerRepository;
-        $this->historyResource = $historyResource;
         $this->historyFactory = $historyFactory;
+        $this->historyRepository = $historyRepository;
         $this->helper = $helper;
     }
 
@@ -65,21 +65,21 @@ class SubmitAllAfter implements ObserverInterface
     {
 
         $params = $this->getParams($observer);
-        $customer_cashback = $this->getAttributeCashback($observer);
+        $customerCashback = $this->getAttributeCashback($observer);
 
         if ($this->checkPayment($observer->getQuote()->getPayment()->getMethod())) {
 
             $cashback = $params['subtotal'] / 100 * $params['pct'];
-            $this->updateAttributeCashback($observer->getQuote()->getCustomer(), $cashback + $customer_cashback);
+            $this->updateAttributeCashback($observer->getQuote()->getCustomer(), $cashback + $customerCashback);
             $this->createHistoryRow('credited', [
                 'customer_id' => $params['customer_id'],
-                'total_cash' => $cashback + $customer_cashback,
+                'total_cash' => $cashback + $customerCashback,
                 'sum' => $cashback
             ]);
         } else {
             $this->createHistoryRow('debit', [
                 'customer_id' => $params['customer_id'],
-                'total_cash' => $customer_cashback - $params['subtotal'],
+                'total_cash' => $customerCashback - $params['subtotal'],
                 'sum' => $params['subtotal']
             ]);
         }
@@ -103,7 +103,7 @@ class SubmitAllAfter implements ObserverInterface
     /**
      * @param $operation
      * @param $param
-     * @throws AlreadyExistsException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     private function createHistoryRow($operation, $param)
     {
@@ -112,7 +112,7 @@ class SubmitAllAfter implements ObserverInterface
         $history->setOperation($operation);
         $history->setRemainCoin($param['total_cash']);
         $history->setSum($param['sum']);
-        $this->historyResource->save($history);
+        $this->historyRepository->save($history);
     }
 
     /**

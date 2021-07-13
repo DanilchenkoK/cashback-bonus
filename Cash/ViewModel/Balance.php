@@ -23,7 +23,6 @@ private $customerSession;
     public function __construct(Session $customerSession, array $data = [])
     {
         parent::__construct($data);
-
         $this->customerSession = $customerSession;
     }
 

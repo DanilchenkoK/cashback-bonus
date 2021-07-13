@@ -7,16 +7,23 @@ declare(strict_types=1);
 
 namespace Kirill\Cash\Observer\Backend\Customer;
 
-use Kirill\Cash\Model\ResourceModel\History;
+
 use Kirill\Cash\Model\HistoryFactory;
+use Kirill\Cash\Model\HistoryRepository;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\CouldNotSaveException;
 
 class SaveAfterDataObject implements ObserverInterface
 {
+    /**
+     * @var HistoryFactory
+     */
     private $historyFactory;
-    private $historyResource;
+    /**
+     * @var HistoryRepository
+     */
+    private $historyRepository;
 
     /**
      * SaveBefore constructor.
@@ -25,15 +32,15 @@ class SaveAfterDataObject implements ObserverInterface
      */
     public function __construct(
         HistoryFactory $historyFactory,
-        History $historyResource)
+        HistoryRepository $historyRepository)
     {
         $this->historyFactory = $historyFactory;
-        $this->historyResource = $historyResource;
+        $this->historyRepository = $historyRepository;
     }
 
     /**
      * @param Observer $observer
-     * @throws AlreadyExistsException
+     * @throws CouldNotSaveException
      */
     public function execute(
         Observer $observer
@@ -52,17 +59,17 @@ class SaveAfterDataObject implements ObserverInterface
      */
     private function getOperationSum($observer)
     {
-        $new_cash_value = $observer->getCustomerDataObject()->getCustomAttributes()['cashback']->getValue();
-        $old_cash_value = $observer->getOrigCustomerDataObject()->getCustomAttributes()['cashback']->getValue();
-        $current_sum = $new_cash_value - $old_cash_value;
+        $newCashValue = $observer->getCustomerDataObject()->getCustomAttributes()['cashback']->getValue();
+        $oldCashValue = $observer->getOrigCustomerDataObject()->getCustomAttributes()['cashback']->getValue();
+        $currentSum = $newCashValue - $oldCashValue;
 
-        return $current_sum < 0 ? -$current_sum : $current_sum;
+        return $currentSum < 0 ? -$currentSum : $currentSum;
     }
 
 
     /**
      * @param $param
-     * @throws AlreadyExistsException
+     * @throws CouldNotSaveException
      */
     private function createHistoryRow($param)
     {
@@ -71,6 +78,6 @@ class SaveAfterDataObject implements ObserverInterface
         $history->setOperation('admin operation');
         $history->setSum($param['sum']);
         $history->setRemainCoin($param['total_cash']);
-        $this->historyResource->save($history);
+        $this->historyRepository->save($history);
     }
 }

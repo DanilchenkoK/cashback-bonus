@@ -2,7 +2,7 @@
 
 namespace Kirill\Cash\Block\Adminhtml\Bonus;
 
-use Kirill\Cash\Model\ResourceModel\History\CollectionFactory;
+use Kirill\Cash\Model\HistoryRepository;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Phrase;
@@ -20,9 +20,9 @@ class Tab extends Template implements TabInterface
      */
     protected $_template = 'customer_bonus_history.phtml';
     /**
-     * @var CollectionFactory
+     * @var HistoryRepository
      */
-    private $historyCollectionFactory;
+    private $historyRepository;
     /**
      * @var RequestInterface
      */
@@ -32,17 +32,17 @@ class Tab extends Template implements TabInterface
      * Tab constructor.
      * @param Context $context
      * @param RequestInterface $request
-     * @param CollectionFactory $historyCollectionFactory
+     * @param HistoryRepository $historyRepository
      * @param array $data
      */
     public function __construct(
         Context $context,
         RequestInterface $request,
-        CollectionFactory $historyCollectionFactory,
+        HistoryRepository $historyRepository,
         array $data = []
     )
     {
-        $this->historyCollectionFactory = $historyCollectionFactory;
+        $this->historyRepository = $historyRepository;
         $this->request = $request;
         parent::__construct($context, $data);
     }
@@ -52,9 +52,7 @@ class Tab extends Template implements TabInterface
      */
     public function getCollectionHistory()
     {
-        $historyCollection = $this->historyCollectionFactory->create();
-        $historyCollection->addFieldToFilter('customer_id', $this->getCustomerId());
-        return $historyCollection;
+        return $this->historyRepository->getListByCustomerId($this->getCustomerId());
     }
 
     /**
