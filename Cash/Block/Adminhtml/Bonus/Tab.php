@@ -15,9 +15,17 @@ use Magento\Ui\Component\Layout\Tabs\TabInterface;
  */
 class Tab extends Template implements TabInterface
 {
-
+    /**
+     * @var string
+     */
     protected $_template = 'customer_bonus_history.phtml';
+    /**
+     * @var CollectionFactory
+     */
     private $historyCollectionFactory;
+    /**
+     * @var RequestInterface
+     */
     private $request;
 
     /**

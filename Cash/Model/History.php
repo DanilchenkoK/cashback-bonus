@@ -2,11 +2,17 @@
 namespace Kirill\Cash\Model;
 class History extends \Magento\Framework\Model\AbstractModel implements \Magento\Framework\DataObject\IdentityInterface
 {
-    const CACHE_TAG = 'cashback_bonus_history';
 
-    protected $_cacheTag = 'cashback_bonus_history';
+    const CACHE_TAG = 'cashback_history';
+    /**
+     * @var string
+     */
+    protected $_cacheTag = 'cashback_history';
+    /**
+     * @var string
+     */
+    protected $_eventPrefix = 'cashback_history';
 
-    protected $_eventPrefix = 'cashback_bonus_history';
 
     protected function _construct()
     {
@@ -26,8 +32,6 @@ class History extends \Magento\Framework\Model\AbstractModel implements \Magento
      */
     public function getDefaultValues()
     {
-        $values = [];
-
-        return $values;
+        return [];
     }
 }

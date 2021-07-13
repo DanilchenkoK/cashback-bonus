@@ -118,17 +118,11 @@ class Cashback extends AbstractMethod
      * @param CartInterface|null $quote
      * @return bool
      */
-    public function isAvailable(CartInterface $quote = null)
+    public function isAvailable(CartInterface $quote = null): bool
     {
-        try {
-            if ($quote->getCustomer()->getId() and
-                $quote->getCustomer()->getCustomAttributes()['cashback']->getValue() >= $quote->getSubtotal()) {
-                return true;
-            }
-        } catch (Exception $e) {
-        }
+        return ($quote->getCustomer()->getId() &&
+            $quote->getCustomer()->getCustomAttributes()['cashback']->getValue() >= $quote->getSubtotal());
 
-        return false;
     }
 
 }

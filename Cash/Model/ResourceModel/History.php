@@ -21,7 +21,7 @@ class History extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
     protected function _construct()
     {
-        $this->_init('cashback_bonus_history', 'id');
+        $this->_init('cashback_history', 'id');
     }
 
 }

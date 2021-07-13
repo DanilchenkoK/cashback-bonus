@@ -1,26 +1,30 @@
 <div class="fieldset-wrapper-title">
-    <span class="title"><?=__('Cashback history')?></span>
+    <span class="title"><?= $block->escapeHTML(__('Cashback history')); ?></span>
 </div>
 <table class="admin__table-secondary">
-    <thead >
+    <thead>
     <tr>
         <th>
-            <h2><?= __("Operation") ?> </h2>
+            <h2><?= $block->escapeHTML(__("Operation")); ?></h2>
         </th>
         <th>
-            <h2><?= __('Remains Coins') ?></h2>
+            <h2><?= $block->escapeHTML(__('Remains Coins')); ?></h2>
         </th>
         <th>
-            <h2><?= __('Created At') ?> </h2>
+            <h2><?= $block->escapeHTML(__('Operation Sum')); ?></h2>
+        </th>
+        <th>
+            <h2><?= $block->escapeHTML(__('Created At')); ?></h2>
         </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($block->getCollectionHistory() as $item) : ?>
         <tr>
-            <td><?= $item->getData('operation'); ?> <br></td>
-            <td><?= $item->getData('remain_coin'); ?> <br></td>
-            <td><?= $item->getData('created_at'); ?> <br></td>
+            <td><?= $block->escapeHTML($item->getOperation()); ?> <br></td>
+            <td><?= $block->escapeHTML($item->getRemainCoin()); ?> <br></td>
+            <td><?= $block->escapeHTML($item->getSum()); ?> <br></td>
+            <td><?= $block->escapeHTML($item->getCreatedAt()); ?> <br></td>
         </tr>
     <?php endforeach; ?>
     </tbody>

@@ -1,0 +1,19 @@
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="cashback_history" resource="default" engine="innodb" comment="History Table">
+        <column xsi:type="smallint" name="id" unsigned="false" nullable="false" identity="true"
+                comment="ID"/>
+        <column xsi:type="smallint" name="customer_id" unsigned="false" nullable="false" identity="false"
+                comment="Customer ID"/>
+        <column xsi:type="varchar" name="operation" nullable="false" length="255" comment="Operation"/>
+        <column xsi:type="float" name="remain_coin" nullable="false"  comment="Remains Coins"/>
+        <column xsi:type="float" name="sum" nullable="false"  comment="Sum"/>
+        <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Operation Time"/>
+        <column xsi:type="timestamp" name="update_time" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="History Update Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+</schema>

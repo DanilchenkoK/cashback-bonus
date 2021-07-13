@@ -1,24 +1,31 @@
+<?php /** @var \Kirill\Cash\Block\Bonus\History $block */ ?>
 <table class="data table">
     <thead>
-        <tr>
-            <th>
-                <?=__("Operation")?>
-            </th>
-            <th>
-                <?=__('Remains Coins')?>
-            </th>
-            <th>
-                <?=__('Created At')?>
-            </th>
-        </tr>
+    <tr>
+        <th>
+            <?= $block->escapeHTML(__("Operation")); ?>
+        </th>
+        <th>
+            <?= $block->escapeHTML(__('Remains Coins')); ?>
+        </th>
+        <th>
+            <?= $block->escapeHTML(__('Operation Sum')); ?>
+        </th>
+        <th>
+            <?= $block->escapeHTML(__('Created At')); ?>
+        </th>
+    </tr>
     </thead>
     <tbody>
-        <?php foreach ($block->getBonusHistory() as $item) :?>
-            <tr>
-                <td><?= $item->getData('operation');?> <br></td>
-                <td><?= $item->getData('remain_coin');?> <br></td>
-                <td><?= $item->getData('created_at');?> <br></td>
-            </tr>
-        <?php endforeach; ?>
+    <?php $historyView = $block->getHistoryView();
+    foreach ($historyView->getBonusHistory() as $item) :?>
+        <tr>
+            <?php //$this->escaper->escapeHTML()?>
+            <td><?= $block->escapeHtml($item->getData('operation')); ?> <br></td>
+            <td><?= $block->escapeHtml($item->getData('remain_coin')); ?> <br></td>
+            <td><?= $block->escapeHtml($item->getData('sum')); ?> <br></td>
+            <td><?= $block->escapeHtml($item->getData('created_at')); ?> <br></td>
+        </tr>
+    <?php endforeach; ?>
     </tbody>
 </table>

@@ -4,7 +4,7 @@ namespace Kirill\Cash\Model\ResourceModel\History;
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
     protected $_idFieldName = 'id';
-    protected $_eventPrefix = 'cashback_bonus_history_collection';
+    protected $_eventPrefix = 'cashback_history_collection';
     protected $_eventObject = 'history_collection';
 
     /**

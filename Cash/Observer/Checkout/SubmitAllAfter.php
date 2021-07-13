@@ -10,17 +10,15 @@ namespace Kirill\Cash\Observer\Checkout;
 use Exception;
 use Kirill\Cash\Helper\Data;
 use Kirill\Cash\Model\ResourceModel\History;
-use Kirill\Cash\Model\HistoryFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\State\InputMismatchException;
 
-/**
- * Class SubmitBefore
- * @package Kirill\Cash\Observer\Checkout
- */
-class SubmitBefore implements ObserverInterface
+class SubmitAllAfter implements ObserverInterface
 {
     /**
      * @var Data
@@ -75,11 +73,13 @@ class SubmitBefore implements ObserverInterface
                 $this->createHistoryRow('credited', [
                     'customer_id' => $params['customer_id'],
                     'total_cash' => $cashback + $customer_cashback,
+                    'sum' => $cashback
                 ]);
-            }else{
-                $this->createHistoryRow('written off', [
+            } else {
+                $this->createHistoryRow('debit', [
                     'customer_id' => $params['customer_id'],
-                    'total_cash' => $customer_cashback - $params['subtotal']
+                    'total_cash' => $customer_cashback - $params['subtotal'],
+                    'sum' => $params['subtotal']
                 ]);
             }
 
@@ -114,6 +114,7 @@ class SubmitBefore implements ObserverInterface
         $history->setCustomerId($param['customer_id']);
         $history->setOperation($operation);
         $history->setRemainCoin($param['total_cash']);
+        $history->setSum($param['sum']);
         $this->historyResource->save($history);
     }
 
@@ -134,9 +135,9 @@ class SubmitBefore implements ObserverInterface
     /**
      * @param $customer
      * @param $cashback
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\State\InputMismatchException
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws InputMismatchException
      */
     private function updateAttributeCashback($customer, $cashback)
     {
@@ -150,9 +151,6 @@ class SubmitBefore implements ObserverInterface
      */
     private function checkPayment($payment): bool
     {
-        if ($payment == 'cashbackbonus') {
-            return false;
-        }
-        return true;
+        return ($payment == 'cashbackbonus');
     }
 }

@@ -3,7 +3,11 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="content">
-            <block after="customer_account_dashboard_info" class="Kirill\Cash\Block\Bonus\Balance" name="customer_account_dashboard_cashback" template="Kirill_Cash::balance.phtml" cacheable="false"/>
+            <block after="customer_account_dashboard_info" class="Kirill\Cash\Block\Bonus\Balance" name="customer_account_dashboard_cashback" template="Kirill_Cash::balance.phtml" cacheable="false">
+                <arguments>
+                    <argument name="balance_view" xsi:type="object">Kirill\Cash\ViewModel\Balance</argument>
+                </arguments>
+            </block>
         </referenceContainer>
     </body>
 </page>

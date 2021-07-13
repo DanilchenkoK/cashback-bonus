@@ -3,7 +3,6 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
-
             <cashbackbonus>
                 <active>1</active>
                 <model>Kirill\Cash\Model\Payment\Cashback</model>

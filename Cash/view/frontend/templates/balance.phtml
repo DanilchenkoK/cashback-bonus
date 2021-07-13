@@ -1,17 +1,20 @@
-<?php if($block->getBonusBalance()):?>
-<div class="box box-information" style="margin-bottom: 40px;">
-    <strong class="box-title">
-        <span><?= $block->escapeHtml(__('Cashback Information')) ?></span>
-    </strong>
-    <div class="box-content" style="margin-top: 10px;">
-        <p>
-            <?= __('Balance : ') ?> <?= $block->escapeHtml($block->getBonusBalance()) ?> Coins<br>
-        </p>
+<?php
+if ($block->getBalanceView()->getBonusBalance()):
+        $balanceView = $block->getBalanceView();
+?>
+    <div class="box box-information" style="margin-bottom: 40px;">
+        <strong class="box-title">
+            <span><?= $block->escapeHtml(__('Cashback Information')) ?></span>
+        </strong>
+        <div class="box-content" style="margin-top: 10px;">
+            <p>
+                <?= __('Balance : ') ?> <?= $block->escapeHtml($balanceView->getBonusBalance()) ?> Coins<br>
+            </p>
+        </div>
+        <div class="box-actions">
+            <a class="action" href="<?= $block->escapeUrl($block->getUrl('cashback/bonus/history')) ?>">
+                <span><?= $block->escapeHtml(__('History')) ?></span>
+            </a>
+        </div>
     </div>
-    <div class="box-actions">
-        <a class="action" href="<?= $block->escapeUrl($block->getUrl('cashback/bonus/history')) ?>">
-            <span><?= $block->escapeHtml(__('History')) ?></span>
-        </a>
-    </div>
-</div>
 <?php endif; ?>

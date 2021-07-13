@@ -31,10 +31,8 @@ class SaveBefore implements ObserverInterface
     }
 
     /**
-     * Execute observer
-     *
      * @param Observer $observer
-     * @return void
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
     public function execute(
         Observer $observer
