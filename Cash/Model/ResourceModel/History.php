@@ -18,7 +18,9 @@ class History extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
         parent::__construct($context);
     }
 
-
+    /**
+     * @return void
+     */
     protected function _construct()
     {
         $this->_init('cashback_history', 'id');

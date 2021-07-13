@@ -13,8 +13,6 @@ class History extends Template
     /**
      * History constructor.
      * @param Context $context
-     * @param CollectionFactory $historyCollectionFactory
-     * @param Session $customerSession
      * @param array $data
      */
     public function __construct(Context $context, array $data = [])

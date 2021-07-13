@@ -39,18 +39,24 @@ class SaveAfterDataObject implements ObserverInterface
         Observer $observer
     )
     {
-        $new_cash_value = $observer->getCustomerDataObject()->getCustomAttributes()['cashback']->getValue();
-        $old_cash_value = $observer->getOrigCustomerDataObject()->getCustomAttributes()['cashback']->getValue();
 
-        $current_sum = $new_cash_value - $old_cash_value;
-        $current_sum = $current_sum < 0 ? -$current_sum : $current_sum;
 
         $this->createHistoryRow([
             'customer_id' => $observer->getCustomerDataObject()->getId(),
             'total_cash' => $observer->getCustomerDataObject()->getCustomAttributes()['cashback']->getValue(),
-            'sum' => $current_sum
+            'sum' => $this->getOperationSum($observer)
         ]);
     }
+
+    private function getOperationSum($observer)
+    {
+        $new_cash_value = $observer->getCustomerDataObject()->getCustomAttributes()['cashback']->getValue();
+        $old_cash_value = $observer->getOrigCustomerDataObject()->getCustomAttributes()['cashback']->getValue();
+        $current_sum = $new_cash_value - $old_cash_value;
+
+        return $current_sum < 0 ? -$current_sum : $current_sum;
+    }
+
 
     /**
      * @param $param

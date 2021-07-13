@@ -14,9 +14,11 @@ use Magento\Framework\View\Element\Block\ArgumentInterface;
 class Balance extends DataObject implements ArgumentInterface
 {
 private $customerSession;
+
     /**
      * Balance constructor.
-     *
+     * @param Session $customerSession
+     * @param array $data
      */
     public function __construct(Session $customerSession, array $data = [])
     {
@@ -26,7 +28,7 @@ private $customerSession;
     }
 
     /**
-     * @return int
+     * @return float | int
      */
     public function getBonusBalance()
     {

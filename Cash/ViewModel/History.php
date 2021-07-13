@@ -25,7 +25,9 @@ class History extends DataObject implements ArgumentInterface
 
     /**
      * History constructor.
-     *
+     * @param CollectionFactory $historyCollectionFactory
+     * @param Session $customerSession
+     * @param array $data
      */
     public function __construct(
         CollectionFactory $historyCollectionFactory,

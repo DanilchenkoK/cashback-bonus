@@ -117,7 +117,7 @@ class SubmitAllAfter implements ObserverInterface
 
     /**
      * @param $observer
-     * @return int
+     * @return float
      */
     private function getAttributeCashback($observer)
     {
