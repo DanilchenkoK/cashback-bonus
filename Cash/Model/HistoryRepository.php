@@ -10,8 +10,6 @@ use Kirill\Cash\Model\ResourceModel\History as ResourceHistory;
 use Kirill\Cash\Model\ResourceModel\History\CollectionFactory as HistoryCollectionFactory;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\CouldNotDeleteException;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 
 class HistoryRepository implements HistoryRepositoryInterface
 {
