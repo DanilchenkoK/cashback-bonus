@@ -5,14 +5,15 @@ namespace Kirill\Cash\Model;
 
 use Exception;
 use Kirill\Cash\Api\Data\HistoryInterface;
+use Kirill\Cash\Api\Data\HistorySearchResultsInterfaceFactory;
 use Kirill\Cash\Api\HistoryRepositoryInterface;
 use Kirill\Cash\Model\ResourceModel\History as ResourceHistory;
 use Kirill\Cash\Model\ResourceModel\History\CollectionFactory as HistoryCollectionFactory;
+use Magento\Framework\Api\SearchCriteria\CollectionProcessor;
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Kirill\Cash\Api\Data\HistorySearchResultsInterfaceFactory;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
+
 
 class HistoryRepository implements HistoryRepositoryInterface
 {
@@ -32,19 +33,28 @@ class HistoryRepository implements HistoryRepositoryInterface
      */
     protected $historyCollectionFactory;
 
+    private $collectionProcessor;
+
+    private $searchResultsFactory;
 
     /**
      * HistoryRepository constructor.
      * @param ResourceHistory $resource
      * @param HistoryFactory $historyFactory
      * @param HistoryCollectionFactory $historyCollectionFactory
+     * @param CollectionProcessor $collectionProcessor
+     * @param HistorySearchResultsInterfaceFactory $searchResultsFactory
      */
     public function __construct(
         ResourceHistory $resource,
         HistoryFactory $historyFactory,
-        HistoryCollectionFactory $historyCollectionFactory
+        HistoryCollectionFactory $historyCollectionFactory,
+        CollectionProcessor $collectionProcessor,
+        HistorySearchResultsInterfaceFactory $searchResultsFactory
     )
     {
+        $this->collectionProcessor = $collectionProcessor;
+        $this->searchResultsFactory = $searchResultsFactory;
         $this->resource = $resource;
         $this->historyFactory = $historyFactory;
         $this->historyCollectionFactory = $historyCollectionFactory;
@@ -55,7 +65,7 @@ class HistoryRepository implements HistoryRepositoryInterface
      * @return HistoryInterface
      * @throws CouldNotSaveException
      */
-    public function save(HistoryInterface $history): HistoryInterface
+    public function save(HistoryInterface $history)
     {
         try {
             $this->resource->save($history);
@@ -66,30 +76,21 @@ class HistoryRepository implements HistoryRepositoryInterface
     }
 
     /**
-     * @param int $historyId
-     * @return HistoryInterface
-     * @throws NoSuchEntityException
-     */
-    public function getById($historyId): HistoryInterface
-    {
-        $history = $this->historyFactory->create();
-        $this->resource->load($history, $historyId);
-        if (!$historyId->getId()) {
-            throw new NoSuchEntityException(__('History with id "%1" does not exist.', $historyId));
-        }
-        return $history;
-    }
-
-
-    /**
-     * @param $customerId
+     * @param SearchCriteriaInterface $criteria
      * @return mixed
      */
-    public function getListByCustomerId($customerId): mixed
+    public function getList(SearchCriteriaInterface $criteria)
     {
-        $historyCollection = $this->historyCollectionFactory->create();
-        $historyCollection->addFieldToFilter('customer_id', $customerId);
-        return $historyCollection;
+
+        $collection = $this->historyCollectionFactory->create();
+        $searchResult = $this->searchResultsFactory->create();
+
+        $this->collectionProcessor->process($criteria, $collection);
+        $searchResult->setItems($collection->getItems());
+        $searchResult->setTotalCount($collection->getSize());
+
+        return $searchResult;
     }
+
 
 }

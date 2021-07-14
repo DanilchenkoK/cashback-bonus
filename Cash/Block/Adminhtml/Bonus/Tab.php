@@ -2,8 +2,10 @@
 
 namespace Kirill\Cash\Block\Adminhtml\Bonus;
 
+use Kirill\Cash\Api\Data\HistoryInterface;
 use Kirill\Cash\Model\HistoryRepository;
 use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Phrase;
 use Magento\Framework\View\Element\Template;
@@ -27,21 +29,28 @@ class Tab extends Template implements TabInterface
      * @var RequestInterface
      */
     private $request;
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
 
     /**
      * Tab constructor.
      * @param Context $context
      * @param RequestInterface $request
      * @param HistoryRepository $historyRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param array $data
      */
     public function __construct(
         Context $context,
         RequestInterface $request,
         HistoryRepository $historyRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         array $data = []
     )
     {
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->historyRepository = $historyRepository;
         $this->request = $request;
         parent::__construct($context, $data);
@@ -52,7 +61,10 @@ class Tab extends Template implements TabInterface
      */
     public function getCollectionHistory()
     {
-        return $this->historyRepository->getListByCustomerId($this->getCustomerId());
+        $this->searchCriteriaBuilder
+            ->addFilter(HistoryInterface::CUSTOMER_ID, $this->getCustomerId())
+            ->setPageSize(5);
+        return $this->historyRepository->getList($this->searchCriteriaBuilder->create())->getItems();
     }
 
     /**

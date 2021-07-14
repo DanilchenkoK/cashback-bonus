@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Kirill\Cash\ViewModel;
 
+use Kirill\Cash\Api\Data\HistoryInterface;
 use Kirill\Cash\Api\HistoryRepositoryInterface;
 use Kirill\Cash\Model\ResourceModel\History\CollectionFactory;
 use Magento\Customer\Model\Session;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\DataObject;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 
@@ -20,25 +22,30 @@ class History extends DataObject implements ArgumentInterface
      */
     private $customerSession;
 
-
     /**
-     * @var HistoryRepository
+     * @var HistoryRepositoryInterface
      */
     private $historyRepository;
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
 
     /**
      * History constructor.
-     * @param CollectionFactory $historyCollectionFactory
      * @param Session $customerSession
+     * @param HistoryRepositoryInterface $historyRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param array $data
      */
     public function __construct(
         Session $customerSession,
         HistoryRepositoryInterface $historyRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         array $data = [])
     {
         parent::__construct($data);
-
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->historyRepository = $historyRepository;
         $this->customerSession = $customerSession;
     }
@@ -48,7 +55,10 @@ class History extends DataObject implements ArgumentInterface
      */
     public function getBonusHistory()
     {
-        return $this->historyRepository->getListByCustomerId($this->customerSession->getId());
+        $this->searchCriteriaBuilder
+            ->addFilter(HistoryInterface::CUSTOMER_ID, $this->customerSession->getCustomer()->getId())
+            ->setPageSize(5);
+        return $this->historyRepository->getList($this->searchCriteriaBuilder->create())->getItems();
     }
 
 }
