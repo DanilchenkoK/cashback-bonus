@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kirill\Cash\Observer\Checkout;
 
 use Exception;
+use Kirill\Cash\Api\HistoryRepositoryInterface;
 use Kirill\Cash\Helper\Data;
 use Kirill\Cash\Model\HistoryRepository;
 use Kirill\Cash\Model\HistoryFactory;
@@ -48,7 +49,7 @@ class SubmitAllAfter implements ObserverInterface
     public function __construct(
         Data $helper,
         HistoryFactory $historyFactory,
-        HistoryRepository $historyRepository,
+        HistoryRepositoryInterface $historyRepository,
         CustomerRepositoryInterface $customerRepository
     )
     {
@@ -103,7 +104,7 @@ class SubmitAllAfter implements ObserverInterface
     /**
      * @param $operation
      * @param $param
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws LocalizedException
      */
     private function createHistoryRow($operation, $param)
     {

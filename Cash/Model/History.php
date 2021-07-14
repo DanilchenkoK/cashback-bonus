@@ -126,15 +126,6 @@ class History extends AbstractModel implements HistoryInterface, IdentityInterfa
     }
 
     /**
-     * @param string $createdAt
-     * @return History
-     */
-    public function setCreatedAt($createdAt)
-    {
-        return $this->setData(self::CREATED_AT, $createdAt);
-    }
-
-    /**
      * @return array|mixed|string|null
      */
     public function getUpdatedAt()

@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Kirill\Cash\Observer\Backend\Customer;
 
 
+use Kirill\Cash\Api\HistoryRepositoryInterface;
 use Kirill\Cash\Model\HistoryFactory;
-use Kirill\Cash\Model\HistoryRepository;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -32,7 +32,7 @@ class SaveAfterDataObject implements ObserverInterface
      */
     public function __construct(
         HistoryFactory $historyFactory,
-        HistoryRepository $historyRepository)
+        HistoryRepositoryInterface $historyRepository)
     {
         $this->historyFactory = $historyFactory;
         $this->historyRepository = $historyRepository;
@@ -69,7 +69,7 @@ class SaveAfterDataObject implements ObserverInterface
 
     /**
      * @param $param
-     * @throws CouldNotSaveException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function createHistoryRow($param)
     {

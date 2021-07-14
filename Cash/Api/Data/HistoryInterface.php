@@ -94,14 +94,7 @@ interface HistoryInterface
      */
     public function getCreatedAt();
 
-    /**
-     * Set created date
-     *
-     * @param string $createdAt
-     * @return $this
-     */
 
-    public function setCreatedAt($createdAt);
 
     /**
      * Get updated date

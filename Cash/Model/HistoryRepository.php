@@ -8,8 +8,11 @@ use Kirill\Cash\Api\Data\HistoryInterface;
 use Kirill\Cash\Api\HistoryRepositoryInterface;
 use Kirill\Cash\Model\ResourceModel\History as ResourceHistory;
 use Kirill\Cash\Model\ResourceModel\History\CollectionFactory as HistoryCollectionFactory;
+use Magento\Framework\Api\SearchCriteriaInterface;
+use Kirill\Cash\Api\Data\HistorySearchResultsInterfaceFactory;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 
 class HistoryRepository implements HistoryRepositoryInterface
 {
@@ -52,7 +55,7 @@ class HistoryRepository implements HistoryRepositoryInterface
      * @return HistoryInterface
      * @throws CouldNotSaveException
      */
-    public function save(HistoryInterface $history)
+    public function save(HistoryInterface $history): HistoryInterface
     {
         try {
             $this->resource->save($history);
@@ -67,7 +70,7 @@ class HistoryRepository implements HistoryRepositoryInterface
      * @return HistoryInterface
      * @throws NoSuchEntityException
      */
-    public function getById($historyId)
+    public function getById($historyId): HistoryInterface
     {
         $history = $this->historyFactory->create();
         $this->resource->load($history, $historyId);
@@ -77,11 +80,12 @@ class HistoryRepository implements HistoryRepositoryInterface
         return $history;
     }
 
+
     /**
      * @param $customerId
      * @return mixed
      */
-    public function getListByCustomerId($customerId)
+    public function getListByCustomerId($customerId): mixed
     {
         $historyCollection = $this->historyCollectionFactory->create();
         $historyCollection->addFieldToFilter('customer_id', $customerId);

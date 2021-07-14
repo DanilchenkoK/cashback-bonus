@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Kirill\Cash\ViewModel;
 
-use Kirill\Cash\Model\HistoryRepository;
+use Kirill\Cash\Api\HistoryRepositoryInterface;
 use Kirill\Cash\Model\ResourceModel\History\CollectionFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\DataObject;
@@ -34,7 +34,7 @@ class History extends DataObject implements ArgumentInterface
      */
     public function __construct(
         Session $customerSession,
-        HistoryRepository $historyRepository,
+        HistoryRepositoryInterface $historyRepository,
         array $data = [])
     {
         parent::__construct($data);
