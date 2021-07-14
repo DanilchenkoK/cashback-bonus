@@ -56,8 +56,7 @@ class History extends DataObject implements ArgumentInterface
     public function getBonusHistory()
     {
         $this->searchCriteriaBuilder
-            ->addFilter(HistoryInterface::CUSTOMER_ID, $this->customerSession->getCustomer()->getId())
-            ->setPageSize(5);
+            ->addFilter(HistoryInterface::CUSTOMER_ID, $this->customerSession->getCustomer()->getId());
         return $this->historyRepository->getList($this->searchCriteriaBuilder->create())->getItems();
     }
 

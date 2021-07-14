@@ -62,8 +62,7 @@ class Tab extends Template implements TabInterface
     public function getCollectionHistory()
     {
         $this->searchCriteriaBuilder
-            ->addFilter(HistoryInterface::CUSTOMER_ID, $this->getCustomerId())
-            ->setPageSize(5);
+            ->addFilter(HistoryInterface::CUSTOMER_ID, $this->getCustomerId());
         return $this->historyRepository->getList($this->searchCriteriaBuilder->create())->getItems();
     }
 
