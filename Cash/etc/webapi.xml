@@ -6,4 +6,12 @@
             <resource ref="anonymous"/>
         </resources>
     </route>
+
+
+    <route method="GET" url="/V1/cashback/history/save">
+        <service class="Kirill\Cash\Api\HistoryRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
 </routes>

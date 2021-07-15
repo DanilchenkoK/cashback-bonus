@@ -66,6 +66,7 @@ class HistoryRepository implements HistoryRepositoryInterface
 
     /**
      * @inerhitDoc
+     * @throws CouldNotSaveException
      */
     public function save(HistoryInterface $history)
     {
