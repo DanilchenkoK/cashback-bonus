@@ -5,6 +5,7 @@ namespace Kirill\Cash\Model;
 
 use Exception;
 use Kirill\Cash\Api\Data\HistoryInterface;
+use Kirill\Cash\Api\Data\HistorySearchResultsInterface;
 use Kirill\Cash\Api\Data\HistorySearchResultsInterfaceFactory;
 use Kirill\Cash\Api\HistoryRepositoryInterface;
 use Kirill\Cash\Model\ResourceModel\History as ResourceHistory;
@@ -12,7 +13,6 @@ use Kirill\Cash\Model\ResourceModel\History\CollectionFactory as HistoryCollecti
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 
 class HistoryRepository implements HistoryRepositoryInterface
@@ -32,9 +32,13 @@ class HistoryRepository implements HistoryRepositoryInterface
      * @var HistoryCollectionFactory
      */
     protected $historyCollectionFactory;
-
+    /**
+     * @var CollectionProcessor
+     */
     private $collectionProcessor;
-
+    /**
+     * @var HistorySearchResultsInterfaceFactory
+     */
     private $searchResultsFactory;
 
     /**
@@ -61,9 +65,7 @@ class HistoryRepository implements HistoryRepositoryInterface
     }
 
     /**
-     * @param HistoryInterface $history
-     * @return HistoryInterface
-     * @throws CouldNotSaveException
+     * @inerhitDoc
      */
     public function save(HistoryInterface $history)
     {
@@ -76,12 +78,10 @@ class HistoryRepository implements HistoryRepositoryInterface
     }
 
     /**
-     * @param SearchCriteriaInterface $criteria
-     * @return mixed
+     * @inheirtDoc
      */
     public function getList(SearchCriteriaInterface $criteria)
     {
-
         $collection = $this->historyCollectionFactory->create();
         $searchResult = $this->searchResultsFactory->create();
 

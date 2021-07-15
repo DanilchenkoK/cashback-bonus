@@ -9,29 +9,30 @@ namespace Kirill\Cash\Observer\Backend\Customer;
 
 
 use Kirill\Cash\Api\HistoryRepositoryInterface;
-use Kirill\Cash\Model\HistoryFactory;
+use Kirill\Cash\Api\Data\HistoryInterfaceFactory;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 
 class SaveAfterDataObject implements ObserverInterface
 {
     /**
-     * @var HistoryFactory
+     * @var HistoryInterfaceFactory
      */
     private $historyFactory;
     /**
-     * @var HistoryRepository
+     * @var HistoryRepositoryInterface
      */
     private $historyRepository;
 
+
     /**
-     * SaveBefore constructor.
-     * @param HistoryFactory $historyFactory
-     * @param History $historyResource
+     * SaveAfterDataObject constructor.
+     * @param HistoryInterfaceFactory $historyFactory
+     * @param HistoryRepositoryInterface $historyRepository
      */
     public function __construct(
-        HistoryFactory $historyFactory,
+        HistoryInterfaceFactory $historyFactory,
         HistoryRepositoryInterface $historyRepository)
     {
         $this->historyFactory = $historyFactory;
@@ -40,7 +41,7 @@ class SaveAfterDataObject implements ObserverInterface
 
     /**
      * @param Observer $observer
-     * @throws CouldNotSaveException
+     * @throws LocalizedException
      */
     public function execute(
         Observer $observer
@@ -69,7 +70,7 @@ class SaveAfterDataObject implements ObserverInterface
 
     /**
      * @param $param
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     private function createHistoryRow($param)
     {

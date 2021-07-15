@@ -103,18 +103,18 @@ class History extends AbstractModel implements HistoryInterface, IdentityInterfa
     /**
      * @return array|float|mixed|null
      */
-    public function getOperationSum()
+    public function getSum()
     {
-        return $this->getData(self::OPERATION_SUM);
+        return $this->getData(self::SUM);
     }
 
     /**
      * @param $operationSum
      * @return History
      */
-    public function setOperationSum($operationSum)
+    public function setSum($operationSum)
     {
-        return $this->setData(self::OPERATION_SUM, $operationSum);
+        return $this->setData(self::SUM, $operationSum);
     }
 
     /**

@@ -7,11 +7,10 @@ declare(strict_types=1);
 
 namespace Kirill\Cash\Observer\Checkout;
 
-use Exception;
+
 use Kirill\Cash\Api\HistoryRepositoryInterface;
 use Kirill\Cash\Helper\Data;
-use Kirill\Cash\Model\HistoryRepository;
-use Kirill\Cash\Model\HistoryFactory;
+use Kirill\Cash\Api\Data\HistoryInterfaceFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -27,11 +26,11 @@ class SubmitAllAfter implements ObserverInterface
      */
     private $helper;
     /**
-     * @var HistoryRepository
+     * @var HistoryRepositoryInterface
      */
     private $historyRepository;
     /**
-     * @var HistoryFactory
+     * @var HistoryInterfaceFactory
      */
     private $historyFactory;
     /**
@@ -41,14 +40,14 @@ class SubmitAllAfter implements ObserverInterface
 
     /**
      * SubmitAllAfter constructor.
-     * @param History $historyResource
      * @param Data $helper
-     * @param HistoryFactory $historyFactory
+     * @param HistoryInterfaceFactory $historyFactory
+     * @param HistoryRepositoryInterface $historyRepository
      * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         Data $helper,
-        HistoryFactory $historyFactory,
+        HistoryInterfaceFactory $historyFactory,
         HistoryRepositoryInterface $historyRepository,
         CustomerRepositoryInterface $customerRepository
     )
@@ -104,16 +103,18 @@ class SubmitAllAfter implements ObserverInterface
     /**
      * @param $operation
      * @param $param
-     * @throws LocalizedException
      */
     private function createHistoryRow($operation, $param)
     {
-        $history = $this->historyFactory->create();
-        $history->setCustomerId($param['customer_id']);
-        $history->setOperation($operation);
-        $history->setRemainCoin($param['total_cash']);
-        $history->setSum($param['sum']);
-        $this->historyRepository->save($history);
+
+            $history = $this->historyFactory->create();
+            $history->setCustomerId($param['customer_id']);
+            $history->setOperation($operation);
+            $history->setRemainCoin($param['total_cash']);
+            $history->setSum($param['sum']);
+            $this->historyRepository->save($history);
+
+
     }
 
     /**
@@ -124,7 +125,7 @@ class SubmitAllAfter implements ObserverInterface
     {
         try {
             return $observer->getQuote()->getCustomer()->getCustomAttributes()['cashback']->getValue();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return 0;
         }
 

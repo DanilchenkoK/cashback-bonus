@@ -13,7 +13,7 @@ interface HistoryInterface
     const CUSTOMER_ID = 'customer_id';
     const OPERATION = 'operation';
     const REMAIN_COIN = 'remain_coin';
-    const OPERATION_SUM = 'sum';
+    const SUM = 'sum';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -76,15 +76,15 @@ interface HistoryInterface
      *
      * @return float|null
      */
-    public function getOperationSum();
+    public function getSum();
 
     /**
      * Set operation sum
      *
-     * @param string $updatedAt
+     * @param string $operationSum
      * @return $this
      */
-    public function setOperationSum($operationSum);
+    public function setSum($operationSum);
 
 
     /**

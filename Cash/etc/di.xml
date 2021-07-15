@@ -19,7 +19,8 @@
 
 
     <preference for="Kirill\Cash\Api\Data\HistoryInterface" type="Kirill\Cash\Model\History"/>
-    <preference for="Kirill\Cash\Api\Data\HistorySearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Kirill\Cash\Api\Data\HistorySearchResultsInterface" type="Kirill\Cash\Model\HistorySearchResults"/>
     <preference for="Kirill\Cash\Api\HistoryRepositoryInterface" type="Kirill\Cash\Model\HistoryRepository"/>
+
 
 </config>
