@@ -3,7 +3,7 @@
     <route method="GET" url="/V1/cashback/history/list">
         <service class="Kirill\Cash\Api\HistoryRepositoryInterface" method="getList"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Kirill_Cash::list"/>
         </resources>
     </route>
 
@@ -11,7 +11,7 @@
     <route method="GET" url="/V1/cashback/history/save">
         <service class="Kirill\Cash\Api\HistoryRepositoryInterface" method="save"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Kirill_Cash::save"/>
         </resources>
     </route>
 </routes>
